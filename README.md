@@ -34,9 +34,11 @@ project-memory-init/
 ├── SKILL.md                         # Skill 唯一入口
 ├── 安装与使用.md                    # 详细安装和使用说明
 ├── references/
-│   └── 初始化规范.md                # 来源调查、交付物和安全边界
+│   ├── 初始化规范.md                # 来源调查、交付物和安全边界
+│   └── 智能体入口兼容.md            # 各客户端入口与统一复用策略
 └── assets/
     ├── 日常项目记忆Skill模板.md      # 生成到目标仓库的日常 Skill 模板
+    ├── 智能体入口/                  # AGENTS 规范片段与厂商薄入口
     └── 项目记忆/                    # Obsidian 项目记忆模板
 ```
 
@@ -68,10 +70,21 @@ Skill 会调查目标项目，并按实际情况创建或补齐：
 
 - `project-memory/` 中文 Obsidian 项目记忆；
 - `.agents/skills/project-memory/SKILL.md` 项目本地日常 Skill；
-- 最短的智能体入口指针；
+- 根 `AGENTS.md` 中稳定的内容分流规则，以及 Claude、Gemini、Copilot 的薄入口；
 - 初始化工作流和第一篇只追加工作记录。
 
 初始化完成后，普通任务的接管、事实刷新和收尾应使用目标项目生成的 `project-memory` Skill，不重复运行初始化。
+
+## 跨智能体入口
+
+初始化后的根 `AGENTS.md` 是唯一的稳定规则源：它说明智能体何时读取 Project Memory，以及行为规则、项目事实、当前进展和历史证据分别应该写在哪里。项目状态、部署步骤和近期结果不会复制到常驻入口。
+
+- Codex、Cursor、Windsurf、Cline、Devin、Junie 和 Continue CLI 直接使用 `AGENTS.md`。
+- Claude Code 使用 `CLAUDE.md` 中的 `@AGENTS.md` 导入。
+- Gemini CLI 使用 `GEMINI.md` 中的 `@./AGENTS.md` 导入。
+- GitHub Copilot 使用 `.github/copilot-instructions.md` 中的短指针。
+
+已有入口文件采用保留式补齐，不覆盖厂商专属规则。完整兼容范围和官方来源见 [智能体入口兼容](references/智能体入口兼容.md)。
 
 ## 聚焦项目记忆图谱
 
