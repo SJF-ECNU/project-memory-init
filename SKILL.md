@@ -50,6 +50,8 @@ description: 在新仓库或项目记忆明显不完整的仓库中，为多个�
 
 仓库根目录是 Vault。双链从 Vault 根编写，使项目记忆可以引用 `docs/`、源码和智能体说明；不要把 `project-memory/` 子目录单独设计成 Vault。
 
+生成的首页必须保留 Obsidian 记忆图谱提示：全局图谱使用 `path:"project-memory/" -path:"project-memory/模板/"` 聚焦当前记忆，并建议隐藏孤立与未创建笔记、开启方向箭头、按首页/工作流/工作记录分组。默认不创建或覆盖 `.obsidian/`；只有用户明确要求配置当前 Vault 时，才保留式修改图谱设置，不得重置主题、插件或工作区偏好。
+
 ### 4. 生成日常 Skill 与入口指针
 
 把 `assets/日常项目记忆Skill模板.md` 适配后写入目标仓库 `.agents/skills/project-memory/SKILL.md`。日常 Skill 负责接管、事实刷新和收尾，不重复初始化。
