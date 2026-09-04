@@ -10,9 +10,10 @@ For meaningful repository work, use the repository-local `project-memory` Skill 
 
 - Agent instruction files such as `AGENTS.md` and vendor-specific entry files contain only stable, repository-wide instructions that change how an agent should work.
 - Code, configuration, architecture documents, runbooks, and change specifications remain the authoritative sources for detailed behavior and procedures.
+- Before creating, moving, or superseding authoritative project documentation, follow [the documentation policy](docs/文档规范.md) and update the relevant entry under [Documentation Home](docs/首页.md). Keep transient progress in Project Memory instead of project documentation.
 - Stable Project Memory notes summarize project purpose, current boundaries, development cautions, and environment or deployment information, with links to authoritative sources.
 - `project-memory/工作流/` stores the current goal, verified progress, blockers, and next step for each bounded stream of work.
 - `project-memory/工作记录/` stores append-only evidence for completed, blocked, cancelled, or handed-off work.
-- Branch snapshots, feature inventories, recent progress, deployment steps, environment values, test results, and historical conclusions do not belong in agent instruction files.
+- Branch snapshots, documentation inventories, feature inventories, recent progress, deployment steps, environment values, test results, and historical conclusions do not belong in agent instruction files.
 
 Only add instructions to an always-loaded agent file when they are stable, apply across most repository tasks, change agent behavior, and cannot be recovered cheaply through a conditional pointer.
