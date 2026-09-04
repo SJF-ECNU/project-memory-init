@@ -3,6 +3,7 @@
 For meaningful repository work, use the repository-local `project-memory` Skill when the client supports repository Skills, and follow [the Project Memory protocol](project-memory/协议.md). If the client does not support Skills, follow the protocol directly.
 
 - Start or resume from [Project Memory Home](project-memory/首页.md), then read the relevant workstream and its most recent linked worklog. Explore older related history from newest to oldest only when the current context is insufficient, and stop when enough information has been recovered.
+- Project Memory, the documentation map, and the repository-local Skill follow the current Git checkout. After switching branches or commits, reload context from the current checkout instead of carrying forward cached state from the previous version.
 - Verify inherited state against Git, current code and configuration, and the repository's active change specifications before relying on it.
 - On completion, handoff, cancellation, or a durable blocker, perform the protocol's closeout flow. Ordinary questions and inconclusive exploration do not create worklogs.
 
