@@ -125,6 +125,8 @@ path:"project-memory/" -path:"project-memory/模板/"
 
 Skill 不会默认创建或覆盖 `.obsidian/`，避免破坏用户已有的主题、插件、工作区和图谱偏好；上述设置由使用者在当前 Vault 中应用。
 
+可选的 Obsidian 2D 插件「记忆星图」在 [memory-constellation 分支](https://github.com/SJF-ECNU/project-memory-init/tree/memory-constellation)独立维护。`main` 只保留轻量的 Project Memory Skill、规范和模板，不依赖该插件。
+
 ## 查看项目文档图谱
 
 初始化生成的文档首页会连接分类索引，再由分类索引连接具体文档。在全局关系图谱的“筛选”中输入：
