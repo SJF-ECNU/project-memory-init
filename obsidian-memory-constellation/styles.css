@@ -1,0 +1,473 @@
+.memory-constellation {
+  --mc-text: #e8e8e8;
+  --mc-muted: #929292;
+  --mc-border: rgba(255, 255, 255, 0.12);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  padding: 0 !important;
+  overflow: hidden;
+  color: var(--mc-text);
+  background:
+    radial-gradient(ellipse at 48% 38%, rgba(255, 255, 255, 0.028), transparent 68%),
+    linear-gradient(150deg, #151515, #101010 72%, #0c0c0c);
+  isolation: isolate;
+  container-type: inline-size;
+}
+
+.memory-constellation::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  content: "";
+  pointer-events: none;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.025);
+}
+
+.memory-constellation__cursor-light {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+  border-radius: 50%;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease;
+}
+.memory-constellation__cursor-light.is-visible { opacity: 1; }
+
+.memory-constellation__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  outline: none;
+  touch-action: none;
+}
+
+.memory-constellation__canvas:active { cursor: grabbing; }
+.memory-constellation__instructions {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.memory-constellation__canvas:focus-visible {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.memory-constellation__chrome {
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  left: 26px;
+  z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  pointer-events: none;
+}
+
+.memory-constellation__heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.memory-constellation__mark {
+  color: #dedede;
+  font-size: 20px;
+  font-weight: 300;
+  opacity: 0.84;
+}
+
+.memory-constellation__title {
+  color: #d2d2d2;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
+.memory-constellation__glass {
+  --mc-glass-x: 30%;
+  --mc-glass-y: 0%;
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.018) 45%, rgba(255, 255, 255, 0.045)),
+    rgba(24, 24, 24, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 4px 8px rgba(0, 0, 0, 0.12),
+    0 16px 40px rgba(0, 0, 0, 0.24);
+  -webkit-backdrop-filter: blur(12px) brightness(1.2) grayscale(1);
+  backdrop-filter: blur(12px) brightness(1.2) grayscale(1);
+}
+
+/* An interrupted specular rim reads as a curved lens, not a solid white border. */
+.memory-constellation__glass::before {
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.1) 18%,
+    transparent 42%, rgba(255, 255, 255, 0.04) 68%, rgba(255, 255, 255, 0.4));
+  -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
+  mask-composite: exclude;
+}
+
+.memory-constellation__glass::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  background: radial-gradient(ellipse 140px 65px at var(--mc-glass-x) var(--mc-glass-y),
+    rgba(255, 255, 255, 0.13), transparent 72%);
+  opacity: 0.45;
+  transition: opacity 280ms ease;
+}
+.memory-constellation__glass:hover::after { opacity: 1; }
+
+.memory-constellation__controls,
+.memory-constellation__navigation {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 5px;
+  pointer-events: auto;
+  transition: transform 420ms cubic-bezier(0.2, 1.5, 0.45, 1),
+    backdrop-filter 240ms ease, -webkit-backdrop-filter 240ms ease;
+}
+.memory-constellation__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 104px 54px;
+  width: 372px;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.memory-constellation__controls:hover {
+  -webkit-backdrop-filter: blur(26px) brightness(1.2) grayscale(1);
+  backdrop-filter: blur(26px) brightness(1.2) grayscale(1);
+}
+.memory-constellation__controls:hover::after { opacity: 0.6; }
+.memory-constellation__navigation:active { transform: scale(0.975, 0.96); }
+
+@supports not (backdrop-filter: blur(1px)) {
+  .memory-constellation__glass { background: #252525; }
+}
+
+.memory-constellation__search {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  min-width: 0;
+  height: 34px;
+  padding: 0 12px 0 12px;
+  margin-right: 4px;
+  border-right: 1px solid var(--mc-border);
+}
+
+.memory-constellation__search-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: #a1a1a1;
+}
+.memory-constellation__search-icon svg { width: 13px; height: 13px; }
+
+.memory-constellation input.memory-constellation__search-input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  color: var(--mc-text);
+  font-family: var(--font-interface);
+  font-size: 12px;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+/* Obsidian's input:hover rule must not paint a rectangular patch inside the lens. */
+.memory-constellation input.memory-constellation__search-input:is(:hover, :focus, :focus-visible, :active) {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  outline: none;
+}
+.memory-constellation__controls:has(input:focus-visible) {
+  outline: 1px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 3px;
+}
+.memory-constellation__search-input::placeholder { color: #8c8c8c; }
+.memory-constellation__search:focus-within .memory-constellation__search-icon { color: #f0f0f0; }
+
+/* Out of flow: results never resize the search capsule or its fixed columns. */
+.memory-constellation__search-panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: rgba(28, 28, 28, 0.96);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.06), 0 16px 40px rgba(0, 0, 0, 0.35);
+}
+.memory-constellation__search-panel[hidden] { display: none; }
+.memory-constellation__search-summary,
+.memory-constellation__search-hint {
+  padding: 5px 8px 9px;
+  color: #a0a0a0;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.memory-constellation__search-hint {
+  padding: 9px 8px 3px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.memory-constellation__search-list {
+  max-height: 360px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+.memory-constellation__search-result {
+  padding: 9px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.memory-constellation__search-result.is-selected { background: rgba(255, 255, 255, 0.09); }
+.memory-constellation__search-result:hover { background: rgba(255, 255, 255, 0.13); }
+.memory-constellation__result-heading { display: flex; align-items: baseline; gap: 10px; }
+.memory-constellation__result-title { flex: 1; min-width: 0; font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.memory-constellation__result-kind { flex-shrink: 0; color: #a7a7a7; font-size: 10px; }
+.memory-constellation__result-path { margin-top: 3px; color: #a0a0a0; font-size: 10px; line-height: 1.5; overflow-wrap: anywhere; }
+.memory-constellation__search-empty { padding: 16px 10px 22px; color: #b0b0b0; font-size: 12px; line-height: 1.7; }
+
+.memory-constellation button.memory-constellation__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 34px;
+  padding: 0 13px;
+  color: #b0b0b0;
+  font-family: var(--font-interface);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  box-shadow: none;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 420ms cubic-bezier(0.2, 1.5, 0.45, 1);
+}
+.memory-constellation button.memory-constellation__button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.memory-constellation button.memory-constellation__button:active { transform: scale(0.94, 0.9); }
+.memory-constellation button.memory-constellation__button:focus-visible {
+  outline: 1px solid #e0e0e0;
+  outline-offset: 2px;
+}
+.memory-constellation button.memory-constellation__button.is-active {
+  color: #f5f5f5;
+  background: rgba(255, 255, 255, 0.115);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.09), 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+.memory-constellation__button svg { width: 14px; height: 14px; stroke-width: 1.5px; }
+
+.memory-constellation__status {
+  position: absolute;
+  bottom: 25px;
+  left: 27px;
+  z-index: 2;
+  color: #858585;
+  font-family: var(--font-interface);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  pointer-events: none;
+}
+
+.memory-constellation__navigation {
+  position: absolute;
+  right: 24px;
+  bottom: 18px;
+  z-index: 3;
+  gap: 1px;
+  padding: 4px;
+}
+.memory-constellation__navigation .memory-constellation__button:last-child {
+  margin-left: 5px;
+}
+.memory-constellation__navigation .memory-constellation__replay {
+  border-left-color: rgba(255, 255, 255, 0.1);
+}
+.memory-constellation__zoom {
+  min-width: 38px;
+  color: #a3a3a3;
+  font-size: 10px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.memory-constellation__caption {
+  position: absolute;
+  bottom: 21px;
+  left: 50%;
+  z-index: 2;
+  max-width: calc(100% - 460px);
+  overflow: hidden;
+  padding: 10px 18px;
+  color: #dedede;
+  font-size: 11px;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, 7px) scale(0.97);
+  transition: opacity 180ms ease, transform 380ms cubic-bezier(0.2, 1.2, 0.4, 1);
+}
+.memory-constellation__caption.is-visible { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+.memory-constellation__relations {
+  position: absolute;
+  top: 88px;
+  right: 24px;
+  bottom: 80px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: min(340px, calc(50% - 28px));
+  box-sizing: border-box;
+  padding: 16px;
+  overflow: auto;
+  border-radius: 20px;
+  background: rgba(26, 26, 26, 0.91);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(10px);
+  transition: opacity 180ms ease, transform 240ms ease, visibility 0s 180ms;
+}
+.memory-constellation__relations.is-left { right: auto; left: 24px; transform: translateX(-10px); }
+.memory-constellation__relations.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+  transition-delay: 0s;
+}
+.memory-constellation__relations > :not(.memory-constellation__relations-list) { flex-shrink: 0; }
+.memory-constellation__relations-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.memory-constellation__relations-meta { color: #a0a0a0; font-size: 10px; line-height: 1.6; }
+.memory-constellation__relations-title { margin: 0; color: #ededed; font-size: 15px; font-weight: 500; line-height: 1.5; overflow-wrap: anywhere; }
+.memory-constellation__relations > .memory-constellation__button { align-self: flex-start; padding-left: 0; }
+.memory-constellation input.memory-constellation__relations-filter {
+  width: 100%;
+  min-width: 0;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--mc-text);
+  font-size: 11px;
+  box-shadow: none;
+}
+.memory-constellation input.memory-constellation__relations-filter:focus { border-color: #929292; outline: none; }
+.memory-constellation__relations-list { flex: 1; min-height: 96px; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.memory-constellation__relation-row { display: flex; align-items: center; gap: 3px; border-radius: 10px; }
+.memory-constellation__relation-row:hover { background: rgba(255, 255, 255, 0.055); }
+.memory-constellation button.memory-constellation__relation-note {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  height: auto;
+  padding: 10px 5px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--mc-text);
+  font-family: var(--font-interface);
+  text-align: left;
+  white-space: normal;
+  box-shadow: none;
+  cursor: pointer;
+}
+.memory-constellation__relation-note .memory-constellation__result-heading { display: block; }
+.memory-constellation__relation-note .memory-constellation__result-kind { display: inline-block; margin-left: 7px; }
+.memory-constellation__relation-note .memory-constellation__result-path { display: block; }
+.memory-constellation button.memory-constellation__relation-note:focus-visible { outline: 1px solid #e0e0e0; outline-offset: -1px; }
+
+@container (max-width: 680px) {
+  .memory-constellation__chrome { top: 14px; right: 14px; left: 16px; gap: 10px; }
+  .memory-constellation__heading { gap: 6px; }
+  .memory-constellation__title { font-size: 12px; letter-spacing: 0.03em; }
+  .memory-constellation__controls { width: 310px; }
+  .memory-constellation__navigation { right: 14px; bottom: 14px; }
+  .memory-constellation__status { left: 16px; bottom: 24px; }
+  .memory-constellation__caption { bottom: 65px; max-width: calc(100% - 32px); }
+  .memory-constellation__relations { top: 72px; right: 14px; bottom: 70px; width: calc(50% - 20px); padding: 10px; }
+  .memory-constellation__relations.is-left { left: 14px; }
+}
+@container (max-width: 460px) {
+  .memory-constellation__title { display: none; }
+  .memory-constellation__controls { width: 292px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .memory-constellation__cursor-light { display: none; }
+  .memory-constellation button.memory-constellation__button,
+  .memory-constellation__glass::after,
+  .memory-constellation__controls,
+  .memory-constellation__navigation,
+  .memory-constellation__relations,
+  .memory-constellation__caption { transition: none; }
+  .memory-constellation button.memory-constellation__button:active,
+  .memory-constellation__navigation:active { transform: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .memory-constellation__glass,
+  .memory-constellation__controls:hover {
+    background: #252525;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .memory-constellation__glass::after { display: none; }
+}

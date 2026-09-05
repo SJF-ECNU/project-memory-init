@@ -1,0 +1,21 @@
+schema: spec-driven
+
+context: |
+  This repository distributes the project-memory-init Skill and optional tools
+  that make its Obsidian relationship layer easier to read. The Memory
+  Constellation plugin is a TypeScript Obsidian community plugin built with
+  esbuild. It must remain read-only with respect to vault notes.
+
+rules:
+  proposal:
+    - State the user-visible outcome and explicit non-goals.
+    - Keep optional visualization tooling separate from the core Skill.
+  specs:
+    - Write testable SHALL requirements with WHEN and THEN scenarios.
+    - Preserve note content and current Git checkout semantics.
+  design:
+    - Prefer a stable two-dimensional layout over continuous force motion.
+    - Explain how visual hierarchy reduces clutter.
+  tasks:
+    - Pair graph-model behavior with focused tests.
+    - Verify a production build and a real EvoMind Vault installation.

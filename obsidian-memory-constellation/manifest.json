@@ -1,0 +1,10 @@
+{
+  "id": "memory-constellation",
+  "name": "Memory Constellation",
+  "version": "0.1.0",
+  "minAppVersion": "1.6.0",
+  "description": "A calm, readable 2D constellation view for Project Memory.",
+  "author": "SJF",
+  "authorUrl": "https://github.com/SJF-ECNU",
+  "isDesktopOnly": false
+}

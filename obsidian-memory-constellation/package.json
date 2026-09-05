@@ -1,0 +1,27 @@
+{
+  "name": "obsidian-memory-constellation",
+  "version": "0.1.0",
+  "description": "A calm, readable 2D constellation view for Project Memory in Obsidian.",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && node esbuild.config.mjs production",
+    "check": "tsc --noEmit",
+    "dev": "node esbuild.config.mjs",
+    "test": "node test.mjs"
+  },
+  "keywords": [
+    "obsidian",
+    "project-memory",
+    "graph",
+    "visualization"
+  ],
+  "author": "SJF",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "esbuild": "0.25.5",
+    "obsidian": "1.13.1",
+    "typescript": "5.9.3"
+  }
+}

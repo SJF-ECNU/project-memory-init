@@ -1,160 +1,41 @@
-# project-memory-init
+# Memory Constellation · 记忆星图
 
-一套帮助多个不同代码 Agent 快速同步项目背景、当前进度、关键注意事项和下一步，并把杂乱项目文档整理成可导航关系图谱的初始化 Skill。它在新仓库、项目记忆明显不完整或项目文档缺少结构的仓库中，一次性生成中文、兼容 Obsidian、可跨 Agent 接续的项目记忆和文档关系层。
+为 Project Memory 提供清晰、轻盈的 Obsidian 2D 关系视图。
 
-项目记忆随仓库版本控制，不依赖某个 Agent、模型、客户端或原始对话。无论后续使用 Codex、Claude Code 或其他代码智能体，都可以从同一套记录中快速恢复上下文。初始化完成后，目标项目会获得一个轻量的日常 `project-memory` Skill，负责后续接管、事实刷新和工作收尾。
+这是 **`memory-constellation` 插件分支**。项目的核心 Skill、跨 Agent 记忆同步规范和初始化模板继续在 [main 分支](https://github.com/SJF-ECNU/project-memory-init/tree/main)维护；使用它们不需要安装本插件。此分支沿用共同的仓库基础，插件实现独立放在 `obsidian-memory-constellation/`，不合并回主分支。
 
-## 它解决什么问题
+## 提供什么
 
-不同 Agent 接手同一项目时，通常需要反复阅读仓库、追溯对话并重新确认约束。本 Skill 把足以接管的信息沉淀在项目仓库中，包括：
+- 按记忆、工作流、工作记录和项目文档组织的稳定 2D 布局。
+- 低饱和分层配色、玻璃风格控件、短范围过渡与 10 秒生长重播。
+- 悬停查看关系，单击锁定 / 取消，双击打开笔记。
+- 可筛选的关联笔记侧栏，以及按标题、文件名和路径定位的搜索。
+- 只读当前 Vault，不修改笔记、不创建数据库，随 Git checkout 的文件与链接刷新。
 
-- 项目目标、架构、已有能力和明确边界；
-- 当前工作流的进度、已验证结果、阻塞和唯一下一步；
-- 开发、测试、数据、安全与运维注意事项；
-- 环境和部署信息，以及静态记录与实时状态的区别；
-- 可追溯、只追加的工作记录和权威来源链接。
+## 构建与安装
 
-这样，新的 Agent 无需依赖前一段会话，就能快速理解“项目是什么、当前做到哪里、做事时要注意什么、下一步是什么”。
-
-## 主要特点
-
-- 为不同 Agent 提供同一份随仓库版本控制的项目上下文，降低重复调查和交接成本。
-- 以仓库根目录作为 Obsidian Vault，使用双链组织项目背景、环境、工作流与工作记录。
-- 为已有项目文档生成“文档首页 → 分类索引 → 具体文档”的关系层，让人和智能体都能找到当前权威入口。
-- 工作记录分别链接实质参考文档和全部文档产物，使文档可以通过 Obsidian 反向链接追溯使用与变更历史。
-- Project Memory、文档图谱和项目本地 Skill 跟随 Git checkout，切换分支或提交后自然展示该版本对应的结构化内容。
-- 默认保留旧文档路径；重复、冲突、孤立和状态未知项先显式标记，不擅自移动、合并或删除。
-- 区分静态文档事实、当前 Git/配置事实、已实时核验事实和未知信息。
-- 保留式更新已有文档，不覆盖用户规则，不重置既有工作流。
-- 工作记录只追加；接管时默认读取相关工作流最近一篇记录，信息不足时再由智能体按需向更早历史追溯，避免上下文随记录总量增长。
-- 明确敏感信息、外部系统、生产操作和事实时效边界。
-- 生成项目本地的日常 Skill，使不同智能体和会话能够沿用同一套协议。
-
-## 目录结构
-
-```text
-project-memory-init/
-├── LICENSE                          # MIT License
-├── SKILL.md                         # Skill 唯一入口
-├── 安装与使用.md                    # 详细安装和使用说明
-├── references/
-│   ├── 初始化规范.md                # 来源调查、交付物和安全边界
-│   ├── 文档结构化规范.md            # 旧文档盘点、分类、关系与迁移边界
-│   └── 智能体入口兼容.md            # 各客户端入口与统一复用策略
-└── assets/
-    ├── 日常项目记忆Skill模板.md      # 生成到目标仓库的日常 Skill 模板
-    ├── 智能体入口/                  # AGENTS 规范片段与厂商薄入口
-    ├── 项目文档/                    # 文档首页、规范和分类索引模板
-    └── 项目记忆/                    # Obsidian 项目记忆模板
-```
-
-## 安装
-
-克隆到通用 Skill 目录：
+需要 Node.js 22 或更新版本及 npm。
 
 ```bash
-git clone https://github.com/SJF-ECNU/project-memory-init.git ~/.agents/skills/project-memory-init
+git clone --branch memory-constellation --single-branch https://github.com/SJF-ECNU/project-memory-init.git memory-constellation
+cd memory-constellation/obsidian-memory-constellation
+npm ci
+npm test
+npm run build
 ```
 
-如果客户端只扫描 Codex 专用目录，也可以安装到：
+把生成的 `main.js` 连同 `manifest.json`、`styles.css` 放进目标 Vault 的 `.obsidian/plugins/memory-constellation/`，在 Obsidian 第三方插件设置中启用 **Memory Constellation**，然后运行“打开记忆星图”。更新已有安装时，先备份这三个文件。
 
-```bash
-git clone https://github.com/SJF-ECNU/project-memory-init.git ~/.codex/skills/project-memory-init
-```
+这是源码分支发布，不是 Obsidian 社区插件商店上架；本分支不提交 `node_modules/` 或生成的 `main.js`。
 
-同一客户端环境只保留一个安装位置，避免重复发现。更多说明见 [安装与使用](安装与使用.md)。
+完整的交互、目录范围与安装说明见 [插件文档](obsidian-memory-constellation/README.md)。
 
-## 使用
+## 开发与状态
 
-在尚未建立项目记忆的项目根目录中，对代码智能体说：
+源代码和测试位于 [obsidian-memory-constellation/](obsidian-memory-constellation/)，设计与验收进度位于 [OpenSpec](openspec/changes/add-memory-constellation-plugin/tasks.md)。
 
-```text
-使用 project-memory-init 初始化当前项目。
-```
+当前版本为 **0.1.0**。自动化测试和生产构建不代表全部实机视觉验收已完成；最新侧栏与部分动态效果仍需前台交互验收，详见任务记录。
 
-Skill 会调查目标项目，并按实际情况创建或补齐：
+## 许可
 
-- `project-memory/` 中文 Obsidian 项目记忆；
-- 项目文档首页、文档规范和按实际内容生成的分类索引；
-- `.agents/skills/project-memory/SKILL.md` 项目本地日常 Skill；
-- 根 `AGENTS.md` 中稳定的内容分流规则，以及 Claude、Gemini、Copilot 的薄入口；
-- 初始化工作流和第一篇只追加工作记录。
-
-初始化完成后，普通任务的接管、事实刷新和收尾应使用目标项目生成的 `project-memory` Skill，不重复运行初始化。
-
-## 跟随 Git 切换
-
-生成的 `project-memory/`、文档首页与索引、项目本地 Skill 和智能体入口都保存在仓库中。切换分支、标签或提交时，它们与代码一起切换，当前 checkout 中的内容就是当前版本的项目上下文。
-
-切换后，智能体会重新读取当前版本的首页、相关工作流和最近工作记录，不继续使用之前分支中已经加载的状态。某篇记录只存在于另一分支是正常版本差异；需要共享时通过项目原有的 Git 合并流程进入目标分支，不额外维护一份跨分支“最新记忆”。
-
-## 结构化已有文档
-
-初始化会先盘点项目自有 Markdown 文档的路径、主题、类型、状态、权威性和关系，再按仓库真实内容生成分类。它不会强制创建一套固定空目录，也不会因为文件名相似就删除或合并旧文档。
-
-默认做法是保留现有路径，通过文档首页和分类索引建立结构；只有能确认文档归属、新位置并更新全部引用时才移动文件。新增、移动或明确替代权威文档后，项目本地 `project-memory` Skill 会要求同步更新相应索引。详细规则见 [项目文档结构化规范](references/文档结构化规范.md)。
-
-## 跨智能体入口
-
-初始化后的根 `AGENTS.md` 是唯一的稳定规则源：它说明智能体何时读取 Project Memory，以及行为规则、项目事实、当前进展和历史证据分别应该写在哪里。项目状态、部署步骤和近期结果不会复制到常驻入口。
-
-- Codex、Cursor、Windsurf、Cline、Devin、Junie 和 Continue CLI 直接使用 `AGENTS.md`。
-- Claude Code 使用 `CLAUDE.md` 中的 `@AGENTS.md` 导入。
-- Gemini CLI 使用 `GEMINI.md` 中的 `@./AGENTS.md` 导入。
-- GitHub Copilot 使用 `.github/copilot-instructions.md` 中的短指针。
-
-已有入口文件一律在原文件前部或已有同名章节中补齐，不创建替代文件，不覆盖厂商专属规则；只有对应入口不存在时才创建最小入口。重复初始化不会重复插入。完整兼容范围和官方来源见 [智能体入口兼容](references/智能体入口兼容.md)。
-
-## 聚焦项目记忆图谱
-
-应继续把仓库根目录作为 Obsidian Vault，这样项目记忆中的 `docs/`、`openspec/`、源码和仓库规则链接才能正常工作。不要为了减少节点而把 `project-memory/` 单独打开成第二个 Vault。
-
-在全局关系图谱的“筛选”中输入：
-
-```text
-path:"project-memory/" -path:"project-memory/模板/"
-```
-
-这样图谱只显示项目背景、当前工作流、工作记录和注意事项，不再被 README、依赖目录和其他源码文档淹没。推荐同时设置：
-
-- 开启“仅显示已创建的笔记”；
-- 关闭“孤立文件”；
-- 开启“箭头”，显示记录之间的引用方向；
-- 用颜色组区分 `首页.md`、`工作流/`、`工作记录/` 和其余稳定背景笔记；
-- 将节点大小调至约 `1.3`、连线粗细调至约 `1.2`、连线长度调至约 `190`，再按项目规模缩放。
-
-Skill 不会默认创建或覆盖 `.obsidian/`，避免破坏用户已有的主题、插件、工作区和图谱偏好；上述设置由使用者在当前 Vault 中应用。
-
-## 查看项目文档图谱
-
-初始化生成的文档首页会连接分类索引，再由分类索引连接具体文档。在全局关系图谱的“筛选”中输入：
-
-```text
-path:"docs/"
-```
-
-如果仓库使用的主文档目录不是 `docs/`，替换为实际路径。需要一起查看权威文档与当前接续状态时，可以使用：
-
-```text
-path:"docs/" OR path:"project-memory/"
-```
-
-图谱用于浏览关系，分类索引中的状态说明才用于区分当前有效、草稿计划、已替代和待核对文档。
-
-工作记录还会为图谱补充两类语义关系：
-
-- “参考文档”表示哪些文档实质影响了本次判断、设计或操作；
-- “文档产物”表示本次新建、更新、移动或明确替代了哪些文档。
-
-关系由工作记录指向文档，文档侧直接使用 Obsidian 反向链接查看历史，不需要为了每一篇工作记录反复修改权威文档。
-
-## 设计边界
-
-- 本 Skill 只建立或修复项目记忆和项目文档关系层，不修改应用行为、生产配置、凭据、远端服务或 Git 历史。
-- `assets/` 中的 `〔……〕` 是需要根据目标项目事实替换的模板占位符，不是可直接交付的成品内容。
-- 文档中登记的环境或部署信息不代表实时在线，也不代表已经获得操作授权。
-- 若目标项目已经使用 OpenSpec 或其他变更协议，初始化过程会遵循它；不会为了项目记忆而强行引入新的规范系统。
-
-## 许可证
-
-本项目采用 [MIT License](LICENSE)。
+[MIT](LICENSE)
